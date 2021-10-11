@@ -12,14 +12,39 @@
 
 
 int main(){
-
+	
 	FILE* fp;
 	int nlines = 0, nsymbols = 0;
+
+
 	fp = fastopen("hamlet.txt");
 	char *buffer = makebuffer(fp, &nlines, &nsymbols);
 	lline *index = makeindex(buffer, nlines, nsymbols);
+	FILE* fop = fopen("hamlet sorted.txt", "w");
 
-	printindex(index, nlines);
+	//sorting alphabetically
+	qsort((void*)index, nlines, sizeof(lline), (int(*) (const void *, const void *))lstrcomp);
+	fprintf(fop, "left sorted:\n");
+	fprintindex(fop, index, nlines);
+	fputc('\n', fop);
+
+	//sorting reversed-alphabetically
+	bubblesort(index, nlines, rstrcomp);
+	fprintf(fop, "right sorted:\n");	
+	fprintindex(fop, index, nlines);
+	fputc('\n', fop);
+
+	//printing original
+	fprintf(fop, "original:\n");
+	fprintbuffer(fop, buffer, nsymbols);
+
+	//clear memory
+	fclose(fp);
+	fclose(fop);
+	free(buffer);
+	free(index);
+
+
 	return 0;
 }
 
