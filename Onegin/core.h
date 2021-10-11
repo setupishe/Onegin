@@ -1,6 +1,6 @@
 #pragma once
 
-typedef struct l_line {
+typedef struct {
 	char* ptr;
 	int length;
 } lline;
@@ -39,3 +39,6 @@ void bubblesort(lline* base, size_t num, int (*compare) (lline*, lline*));
 
 //Swaps two llines
 void swap(lline* a, lline* b);
+
+//Gets size of file using stat
+int getsize(const char* name);

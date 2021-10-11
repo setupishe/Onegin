@@ -12,15 +12,34 @@
 
 
 int main(){
-	
-	FILE* fp;
+
+
+	FILE* fp = NULL;
 	int nlines = 0, nsymbols = 0;
 
+	if (!(fp = fastopen("hamlet.txt"))){
+		return 1;
+	}
 
-	fp = fastopen("hamlet.txt");
-	char *buffer = makebuffer(fp, &nlines, &nsymbols);
-	lline *index = makeindex(buffer, nlines, nsymbols);
-	FILE* fop = fopen("hamlet sorted.txt", "w");
+	if ((nsymbols = getsize("hamlet.txt")) == 0) {
+		printf("Cannot check file size");
+			return 1;
+	}
+
+	char* buffer = NULL;
+	if (!(buffer = makebuffer(fp, &nlines, &nsymbols))) {
+		return 1;
+	}
+
+	lline* index = NULL;
+	if (!(index = makeindex(buffer, nlines, nsymbols))) {
+		return 1;
+	}
+
+	FILE* fop = NULL;
+	if (!(fop = fopen("hamlet sorted.txt", "w"))) {
+		return 1;
+	}
 
 	//sorting alphabetically
 	qsort((void*)index, nlines, sizeof(lline), (int(*) (const void *, const void *))lstrcomp);
@@ -43,7 +62,6 @@ int main(){
 	fclose(fop);
 	free(buffer);
 	free(index);
-
 
 	return 0;
 }

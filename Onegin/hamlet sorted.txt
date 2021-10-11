@@ -1,54 +1,55 @@
 left sorted:
-A little ere the mightiest Julius fell,
-A mote it is to trouble the mind's eye.
-And even the like precurse of fierce events,
+/A little ere the mightiest Julius fell,
+/A mote it is to trouble the mind's eye.//
+34And even the like precurse of fierce events,
 And prologue to the omen coming on,
-As harbingers preceding still the fates
-As stars with trains of fire and dews of blood,
+..As harbingers preceding still the fates
+...As stars with trains of fire and dews of blood,/./.
 But soft, behold! lo, where it comes again!
-Did squeak and gibber in the Roman streets:
-Disasters in the sun; and the moist star
+.Did squeak and gibber in the Roman streets:
+///Disasters in the sun; and the moist star
 Have heaven and earth together demonstrated
-In the most high and palmy state of Rome,
-The graves stood tenantless and the sheeted dead
-Unto our climatures and countrymen.--
-Upon whose influence Neptune's empire stands
-Was sick almost to doomsday with eclipse:
+/In the most high and palmy state of Rome,
+/The graves stood tenantless and the sheeted dead
+/Unto our climatures and countrymen.--
+687Upon whose influence Neptune's empire stands
+568Was sick almost to doomsday with eclipse:
 
 right sorted:
-The graves stood tenantless and the sheeted dead
+/The graves stood tenantless and the sheeted dead
 Have heaven and earth together demonstrated
-Disasters in the sun; and the moist star
-Upon whose influence Neptune's empire stands
-As harbingers preceding still the fates
-A mote it is to trouble the mind's eye.
-And even the like precurse of fierce events,
-And prologue to the omen coming on,
-In the most high and palmy state of Rome,
-As stars with trains of fire and dews of blood,
+...As stars with trains of fire and dews of blood,/./.
+/In the most high and palmy state of Rome,
+568Was sick almost to doomsday with eclipse:
+/A mote it is to trouble the mind's eye.//
+/A little ere the mightiest Julius fell,
+/Unto our climatures and countrymen.--
 But soft, behold! lo, where it comes again!
-Did squeak and gibber in the Roman streets:
-Was sick almost to doomsday with eclipse:
-Unto our climatures and countrymen.--
-A little ere the mightiest Julius fell,
+And prologue to the omen coming on,
+///Disasters in the sun; and the moist star
+687Upon whose influence Neptune's empire stands
+..As harbingers preceding still the fates
+.Did squeak and gibber in the Roman streets:
+34And even the like precurse of fierce events,
 
 original:
-A
-A mote it is to trouble the mind's eye.
-In the most high and palmy state of Rome,
-A little ere the mightiest Julius fell,
-The graves stood tenantless and the sheeted dead
-Did squeak and gibber in the Roman streets:
-As stars with trains of fire and dews of blood,
-Disasters in the sun; and the moist star
-Upon whose influence Neptune's empire stands
-Was sick almost to doomsday with eclipse:
-And even the like precurse of fierce events,
-As harbingers preceding still the fates
+/A mote it is to trouble the mind's eye.//
+/In the most high and palmy state of Rome,
+/A little ere the mightiest Julius fell,
+/The graves stood tenantless and the sheeted dead
+.Did squeak and gibber in the Roman streets:
+...As stars with trains of fire and dews of blood,/./.
+///Disasters in the sun; and the moist star
+687Upon whose influence Neptune's empire stands
+568Was sick almost to doomsday with eclipse:
+34And even the like precurse of fierce events,
+..As harbingers preceding still the fates
 And prologue to the omen coming on,
 Have heaven and earth together demonstrated
-Unto our climatures and countrymen.--
+/Unto our climatures and countrymen.--
 But soft, behold! lo, where it comes again!
+
+
 
 
 

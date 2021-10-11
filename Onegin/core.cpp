@@ -1,7 +1,7 @@
 
 #define _CRT_SECURE_NO_WARNINGS
 #define _CRT_NONSTDC_NO_DEPRECATE
-
+#define BOTH(a,b,c) ((a == c && a == b) || (a != c && b != c))
 
 
 #include <stdio.h>
@@ -19,57 +19,52 @@
 FILE* fastopen(const char *name) {
 	assert(name != NULL);
 
-	FILE* fp;
-	int dfp;
-
-	if (dfp = open((const char*)name, O_RDONLY) == -1) {
+	FILE* fp = NULL;
+	int dfp = 0;
+	if ((dfp = open(name, O_RDONLY)) == -1) {
 		printf("Cannot open file: descriptor creation failed\n");
-		exit(1);
+		return NULL;
 	}
-	if (!(fp = fdopen(dfp, "r"))) {
+	if (!(fp = fdopen(dfp, "r"))) { 
 		printf("Cannot open file: file pointer creation failed\n");
-		exit(1);
+		return NULL;
 	}
 
 	return fp;
 }
 
-//
+int getsize(const char *name) {
+	struct stat statfp = {};
+	if (stat(name, &statfp) == -1) {
+		printf("Cannot check file size");
+		return 0;
+	}
+	return statfp.st_size;
+}
+
 char *makebuffer(FILE* fp, int *n_lines, int *n_symbols) {
 	assert(fp != NULL);
-	assert(*n_lines != 0);
-	assert(*n_symbols != 0);
+	assert(n_lines != NULL);
+	assert(n_symbols != NULL);
 
-	char c;
-	struct stat statfp;
+	char c = 0;
 	int nlines = 0, nsymbols = 0;
-	if (stat("hamlet.txt", &statfp) == -1) { //check file size
-		printf("Cannot check file size");
-		exit(1);
-	}
-	nsymbols = statfp.st_size;
+
+
 	//printf("size = %d\n", statfp.st_size);
+	if ((nsymbols = getsize("hamlet.txt")) == 0) {
+		printf("Cannot check file size");
+		return NULL;
+	}
 
-
-	char* buffer = (char*)calloc(nsymbols, sizeof(char));
+	char* buffer = (char *)calloc(nsymbols, sizeof(char));
 	if (!buffer) {
 		printf("Cannot create buffer");
-		exit(1);
+		return NULL;
 	}
 
 	c = getc(fp); //fill the buffer
-	if (c != '\r') {
-		if (c == '\n') {
-			buffer[0] = '\0';
-			nlines++;
-		}
-		else {
-			buffer[0] = c;
-		}
-	}
-
-	for (int i = 1; c != EOF; c = getc(fp)) {
-		i++;
+	for (int i = 0; c != EOF; c = getc(fp)) {
 		if (c != '\r') {
 			if (c == '\n') {
 				buffer[i] = '\0';
@@ -79,7 +74,7 @@ char *makebuffer(FILE* fp, int *n_lines, int *n_symbols) {
 				buffer[i] = c;
 			}
 		}
-
+		i++;
 	}
 	buffer[nsymbols - 1] = '\0';
 	if (nlines != 0) {
@@ -88,9 +83,6 @@ char *makebuffer(FILE* fp, int *n_lines, int *n_symbols) {
 
 	*n_lines = nlines;
 	*n_symbols = nsymbols;
-
-
-
 	return buffer;
 }
 
@@ -98,18 +90,18 @@ char *makebuffer(FILE* fp, int *n_lines, int *n_symbols) {
 lline* makeindex(char* buffer, int nlines, int nsymbols) {
 
 	assert(buffer != NULL);
-	assert(nlines != 0);
-	assert(nsymbols != 0);
+	assert(nlines > 0);
+	assert(nsymbols > 0);
 
 	lline *index = (lline*)calloc(nlines, sizeof(lline)); 
 
 	if (!index) {
 		printf("Cannot create index");
-		exit(1);
+		return NULL;
 	}
 
 	int k = 0;
-	if (buffer[0] != '\0' && buffer[1] != '\0') { //check if the first element start the line
+	if (buffer[0] != '\0') { //check if the first element start the line 
 		index[k].ptr = buffer;
 		index[k].length = strlen(index[k].ptr);
 		k++;
@@ -157,10 +149,6 @@ void fprintbuffer(FILE* fp, char* buffer, int nsymbols) {
 		if (buffer[i] == '\0') {
 			buffer[i] = '\n';
 		}
-		/*if (buffer[i] == -1)
-		{
-			break;
-		}*/
 		fputc(buffer[i], fp);
 	}
 }
@@ -168,48 +156,50 @@ void fprintbuffer(FILE* fp, char* buffer, int nsymbols) {
 
 int lstrcomp(lline *left, lline *right) {
 
-	if (!((left->ptr[0] <= RIGHTCAP && left->ptr[0] >= LEFTCAP) || (left->ptr[0] <= RIGHTLOW && left->ptr[0] >= LEFTLOW))) {
-		return 2;
-	}
-	else if (!((right->ptr[0] <= RIGHTCAP && right->ptr[0] >= LEFTCAP) || (right->ptr[0] <= RIGHTLOW && right->ptr[0] >= LEFTLOW))) {
-		return -2;
-	}
-	else {
-		int n = (left->length > right->length) ? left->length : right->length;
-		for (int i = 0; i < n; i++) {
-			if ((tolower(left->ptr[i])) > tolower(right->ptr[i])) {
+	for (int i = 0, k = 0; left->ptr[i] != '\0' && right->ptr[k] != '\0'; i++, k++) {
+		if ((isalpha(left->ptr[i])) && (isalpha(right->ptr[k]))) {
+			if ((tolower(left->ptr[i])) > tolower(right->ptr[k])) {
 				return 1;
 			}
-			else if ((tolower(left->ptr[i])) < tolower(right->ptr[i])) {
+			else if ((tolower(left->ptr[i])) < tolower(right->ptr[k])) {
 				return -1;
 			}
 		}
-
-		return 0;
-		
+		else if (isalpha(left->ptr[i])) {
+			i--;
+			continue;
+		}
+		else {
+			k--;
+			continue;
+		}
 	}
+	
+	return 0;
 }
 
 int rstrcomp(lline* left, lline* right) {
 
-	if (!((left->ptr[left->length - 1] <= RIGHTCAP && left->ptr[left->length - 1] >= LEFTCAP) || (left->ptr[left->length - 1] <= RIGHTLOW && left->ptr[left->length - 1] >= LEFTLOW))) {
-		return 2;
-	}
-	else if (!((right->ptr[right->length - 1] <= RIGHTCAP && right->ptr[right->length - 1] >= LEFTCAP) || (right->ptr[right->length - 1] <= RIGHTLOW && right->ptr[right->length - 1] >= LEFTLOW))) {
-		return -2;
-	}
-	else {
-		int n = (left->length > right->length) ? left->length : right->length;
-		for (int i = 0; i < n; i++) {
-			if ((tolower(left->ptr[left->length - 1 - i])) > tolower(right->ptr[right->length - 1 - i])) {
+	for (int i = 0, k = 0; left->ptr[left->length - 1 - i] != '\0' && right->ptr[right->length -1 - k] != '\0'; i++, k++) {
+		if ((isalpha(left->ptr[left->length - 1 - i])) && (isalpha(right->ptr[right->length - 1 - k]))) {
+			if ((tolower(left->ptr[left->length - 1 - i])) > tolower(right->ptr[right->length - 1 - k])) {
 				return 1;
 			}
-			else if ((tolower(left->ptr[left->length - 1 - i])) < tolower(right->ptr[right->length - 1 - i])) {
+			else if ((tolower(left->ptr[left->length - 1 - i])) < tolower(right->ptr[right->length - 1 - k])) {
 				return -1;
 			}
 		}
-		return 0;
+		else if (isalpha(left->ptr[left->length - 1 - i])) {
+			i--;
+			continue;
+		}
+		else {
+			k--;
+			continue;
+		}
 	}
+
+	return 0;
 }
 
 void swap(lline* a, lline* b) {
